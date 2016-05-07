@@ -9,6 +9,8 @@ waveGen ---> generate wave
 hilbertTran ----> hilbert transformation
 lockin ----> Lockin amplifier
 half/doubleFrequency ----> half or double frequency of wave
+lowpassFilter -----> continuous lowpass filter 
+fftLowpassFilter ----> fft lowpass filter fft input -> cut off high frequency -> ifft to recover the lowpass wave
 
 '''
 import numpy as np
@@ -17,7 +19,7 @@ import numpy as np
 class WaveProcessing:
     def __init__(self):
         pass
-    def waveGen(self, nDataPoint = 10000, time = 10.0, amp = 10.5, freq = 9.0, dc = 0,phase=0):
+    def waveGen(self, nDataPoint = 10000, time = 10.0, amp = 1.0, freq = 10.0, dc = 0,phase=0):
         '''Generate and return time and sin wave'''
         k = np.array(np.arange(nDataPoint))
         t = time/nDataPoint*k
@@ -56,19 +58,22 @@ class WaveProcessing:
             y.append(-wav[k])
         return y    
     def lowpassFilter(self,x,dt,RC):
+        '''Continuous lowpass filter'''
         y = x
         a = dt/(RC+dt)
         for i in range (1, len(y)):
             y[i]=a *x[i]+(1-a)*y[i-1]
         return y
-    def fftLowpassFilter(self, x, frqCutoff, dtime):
+    def fftBandpassFilter(self, x, frqLowCutoff, frqHighCutoff, dtime):
+        '''fft Bandpass filter'''
         fftresult = np.fft.rfft(x)
         fftfrq = np.fft.rfftfreq(len(x), dtime)
-        #print fftfrq,fftresult
         for i in range (0,len(fftfrq)):
-            if fftfrq[i]>frqCutoff:
+            if fftfrq[i]<frqLowCutoff:
+                fftresult [i] = 0.0
+            if fftfrq[i]>frqHighCutoff:
                 fftresult [i:len(fftresult)] = 0.0
-                return abs(np.fft.irfftn(fftresult))
+                return np.fft.irfftn(fftresult)
                 
         
         
