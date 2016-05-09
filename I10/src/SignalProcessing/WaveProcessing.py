@@ -14,7 +14,7 @@ fftLowpassFilter ----> fft lowpass filter fft input -> cut off high frequency ->
 
 '''
 import numpy as np
-
+import matplotlib.pyplot as plt
 
 class WaveProcessing:
     def __init__(self):
@@ -73,7 +73,7 @@ class WaveProcessing:
                 fftresult [i] = 0.0
             if fftfrq[i]>frqHighCutoff:
                 fftresult [i:len(fftresult)] = 0.0
-                return np.fft.irfftn(fftresult)
+        return np.fft.irfftn(fftresult)
                 
         
         
