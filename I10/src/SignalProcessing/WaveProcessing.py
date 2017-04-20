@@ -14,7 +14,7 @@ fftLowpassFilter ----> fft lowpass filter fft input -> cut off high frequency ->
 
 '''
 import numpy as np
-import matplotlib.pyplot as plt
+from scipy import signal
 
 class WaveProcessing:
     def __init__(self):
@@ -25,6 +25,15 @@ class WaveProcessing:
         t = time/nDataPoint*k
         y = dc + amp*np.sin(2*np.pi*freq*t+phase*np.pi/360.)
         return t , y
+    
+    def squreWaveGen(self, nDataPoint = 10000, time = 10.0, amp = 1.0, freq = 10.0, dc = 0,phase=0):
+        '''Generate and return time and sin wave'''
+        t = np.linspace(0, 1, nDataPoint, endpoint=False)
+        k = np.array(np.arange(nDataPoint))
+        tempT = time/nDataPoint*k
+        y = dc + amp*signal.square(2.0 * np.pi * 9 * t*time) 
+        return tempT , y
+        
     def hilbertTran(self,wav):
         '''Hilber transformation for any real wave'''
         wavefft = np.fft.fft(wav)*2.0
@@ -54,9 +63,9 @@ class WaveProcessing:
         n = len(wav)
         for i in range(0,n,2):
             y.append(wav[i])
-        for k in range(n-1,0,-2):
-            y.append(-wav[k])
-        return y    
+        """for k in range(1,n,2):
+            y.append(abs(-wav[k]))"""
+        return y   
     def lowpassFilter(self,x,dt,RC):
         '''Continuous lowpass filter'''
         y = x
@@ -73,7 +82,10 @@ class WaveProcessing:
                 fftresult [i] = 0.0
             if fftfrq[i]>frqHighCutoff:
                 fftresult [i:len(fftresult)] = 0.0
-        return np.fft.irfftn(fftresult)
+        ifft = np.fft.irfft(fftresult)    
+        if len(ifft)<len(x):
+            ifft = np.insert(ifft, 0,ifft[0])
+        return ifft
                 
         
         
