@@ -3,6 +3,7 @@
 	<name>I10</name>
 	<comment></comment>
 	<projects>
+		<project>RS232</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
