@@ -2,6 +2,10 @@
 Created on 6 Dec 2016
 
 @author: wvx67826
+
+Fit Cff against change in wavelength to work out d theta and d beta
+Nuclear Instruments and Methods in Physics Research A 467–468 (2001) 482–484
+
 '''
 import numpy as dnp
 from epics import caget
@@ -43,6 +47,8 @@ def func(params, cff, energy, err):
         y = pgm.cal_dlamda(x, lamda, nLine, dTheta, dbeta)
         chi2 = chi2 +(energy[n]-y)*(energy[n]-y)/(err[n]*err[n])
     return chi2
+
+
 
 nLine = 300./1e7
 lamda = 12.4/0.50096    
