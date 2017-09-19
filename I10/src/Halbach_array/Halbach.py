@@ -31,7 +31,15 @@ class Halbach(object):
         time.sleep(2.0)
         xField = self.hallProb.get("TINP")
 
-        self.xField = xField[:6]
+        self.xField = float(xField[:6])
+        """ To be added 
+        if isinstance(xField, float):
+            self.xField = float(xField[:6])
+        else:
+            print "read again"
+            xField = self.hallProb.get("TINP")
+            self.xField = float(xField[:6])
+         """   
         #print self.xField
 
     def setup_prob(self):
