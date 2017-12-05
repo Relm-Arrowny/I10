@@ -30,7 +30,13 @@ class Halbach(object):
         self.hallProb.set_tran_state("read")
         time.sleep(2.0)
         xField = self.hallProb.get("TINP")
-
+        while len(xField)<6:
+            self.hallProb.set_tran_state("flush")
+            self.hallProb.set_tran_state("read")
+            time.sleep(2.0)
+            xField = self.hallProb.get("TINP")
+            
+            
         self.xField = float(xField[:6])
         """ To be added 
         if isinstance(xField, float):
